@@ -1,12 +1,16 @@
 
 import pandas as pd
+import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from ast import literal_eval
 
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging
+
+DATAST_FOLDRE = 'data/archive'
 
 def get_top_movies_by_score(metadata_df, quantile=0.9):
 
@@ -31,10 +35,6 @@ def get_similar_movies_by_overview(top5000_movies, metadata_df, title):
     search_movie = movies_df[movies_df['title']==title].iloc[-1]
     idx = movies_df.index.get_loc(search_movie.name)
 
-    print(idx)
-    print(movies_df.iloc[idx]['title'])
-    # print(metadata_df.iloc[idx]['title'])
-
     tfidf = TfidfVectorizer(stop_words='english')
     movies_df['overview'].fillna('', inplace=True)
 
@@ -42,27 +42,59 @@ def get_similar_movies_by_overview(top5000_movies, metadata_df, title):
     matrix = tfidf.fit_transform(movies_df['overview'])    
     cosine_sim = linear_kernel(matrix, matrix)
     logger.info('linear_kernel ended.')
-    print(type(cosine_sim))
     scores = list(enumerate(cosine_sim[idx]))
     movies_df['score_'] = movies_df.apply(lambda row:scores[movies_df.index.get_loc(row.name)][1], axis=1)
     movies_df.sort_values(['score_'], ascending=False, inplace=True)
-    print(movies_df.head(3))
     return movies_df[['title', 'score_']].iloc[0 : 11]
 
 
+def get_similar_by_features(top5000, metadata_df, movie_title):
+    keywords = pd.read_csv(DATAST_FOLDRE+'/keywords.csv', dtype={'id':'Int64'})
+    credits = pd.read_csv(DATAST_FOLDRE+'/credits.csv', dtype={'id':'Int64'})
+    metadata_df = metadata_df.drop([19730, 29503, 35587])
+    metadata_df['id'] = metadata_df['id'].astype('int')
 
+    print(metadata_df.shape)
+    metadata_df = metadata_df.merge(keywords, how='inner', on='id').merge(credits, how='inner', on='id')
+    print(metadata_df.shape)
+
+    features = ['cast', 'crew', 'keywords', 'genres']
+    for feature in features:
+        # metadata_df[feature] = metadata_df[feature].apply(lambda f:literal_eval(f[feature].lower() if f[feature] else ""), axis=1)
+        metadata_df[feature] = metadata_df[feature].apply(literal_eval)
+        print(metadata_df[feature].head(5))
+    
+    def get_director(x):
+        for i in x:
+            if 'director' in i['job'].lower():
+                return i['name']
+        return np.nan
+
+    metadata_df['director'] = metadata_df['crew'].apply(get_director)
+
+    def get_list(x):
+        if isinstance(x, list):
+            names = [i['name'] for i in x]
+            #Check if more than 3 elements exist. If yes, return only first three. If no, return entire list.
+            names[:3]
+        return []
+
+    features = ['cast', 'keywords', 'genres']
+    for feature in features:
+        metadata_df[feature] = metadata_df[feature].apply(get_list)
+
+    print(metadata_df[['title', 'cast', 'director', 'keywords', 'genres']].head(3))
 
 def main():
-    dataset_folder = 'data/archive'
-    metadata_df = pd.read_csv(dataset_folder+"/movies_metadata.csv", low_memory=False)
-
+    metadata_df = pd.read_csv(DATAST_FOLDRE+"/movies_metadata.csv", low_memory=False)
+    
     # pd.set_option("display.max_rows", None, "display.max_columns", None, "display.width", 1000)
 
     top5000 = get_top_movies_by_score(metadata_df)
     print(top5000.shape)
 
     # recommendations = get_similar_movies_by_overview(top5000, metadata_df, 'Grumpier Old Men')
-    recommendations = get_similar_movies_by_overview(top5000, metadata_df, 'The Dark Knight Rises')
+    recommendations = get_similar_by_features(top5000, metadata_df, 'Grumpier Old Men')
     
     print(recommendations)
 
