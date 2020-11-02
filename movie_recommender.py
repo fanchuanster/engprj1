@@ -2,8 +2,11 @@
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from sklearn.metrics.pairwise import cosine_similarity
 from ast import literal_eval
+
 
 import logging
 
@@ -38,10 +41,9 @@ def get_similar_movies_by_overview(top5000_movies, metadata_df, title):
     tfidf = TfidfVectorizer(stop_words='english')
     movies_df['overview'].fillna('', inplace=True)
 
-    logger.info('linear_kernel start..')
     matrix = tfidf.fit_transform(movies_df['overview'])    
     cosine_sim = linear_kernel(matrix, matrix)
-    logger.info('linear_kernel ended.')
+    
     scores = list(enumerate(cosine_sim[idx]))
     movies_df['score_'] = movies_df.apply(lambda row:scores[movies_df.index.get_loc(row.name)][1], axis=1)
     movies_df.sort_values(['score_'], ascending=False, inplace=True)
@@ -67,23 +69,35 @@ def get_similar_by_features(top5000, metadata_df, movie_title):
     def get_director(x):
         for i in x:
             if 'director' in i['job'].lower():
-                return i['name']
+                return i['name'].lower().replace(" ", "")
         return np.nan
 
     metadata_df['director'] = metadata_df['crew'].apply(get_director)
 
     def get_list(x):
         if isinstance(x, list):
-            names = [i['name'] for i in x]
+            names = [i['name'].lower().replace(" ", "") for i in x]
             #Check if more than 3 elements exist. If yes, return only first three. If no, return entire list.
-            names[:3]
+            return names[:3]
         return []
 
     features = ['cast', 'keywords', 'genres']
     for feature in features:
         metadata_df[feature] = metadata_df[feature].apply(get_list)
 
-    print(metadata_df[['title', 'cast', 'director', 'keywords', 'genres']].head(3))
+    # print(metadata_df[['title', 'cast', 'director', 'keywords', 'genres']].head(3))
+
+    def create_soup(x):
+        return ' '.join(x['keywords']) + ' ' + ' '.join(x['cast']) + ' ' + x['director'] + ' ' + ' '.join(x['genres'])
+    # Create a new soup feature
+    metadata_df['soup'] = metadata_df.apply(create_soup, axis=1)
+    metadata_df[['soup']].head(2)
+
+    count = CountVectorizer(stop_words='english')
+    count_matrix = count.fit_transform(metadata_df['soup'])
+    cosine_sim = cosine_similarity(count_matrix, count_matrix)
+    metadata_df = metadata_df.reset_index()
+
 
 def main():
     metadata_df = pd.read_csv(DATAST_FOLDRE+"/movies_metadata.csv", low_memory=False)
