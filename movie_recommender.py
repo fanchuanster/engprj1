@@ -38,7 +38,7 @@ class MovieRecommender:
 
         return movies_df[['id', 'title', 'vote_count', 'vote_average', 'score', 'overview']]
 
-    def get_similar_movies_by_overview(self, title):
+    def recommend_by_overview(self, title, index_1_based = 1):
 
         movies_df = self.metadata_df.copy()[self.metadata_df['id'].isin(self.top5000_movies.id) | (self.metadata_df['title']==title)]
         movie_to_searchs = movies_df[movies_df['title']==title]
@@ -47,7 +47,7 @@ class MovieRecommender:
 
         assert len(movie_to_searchs.index)==1, "Should be only one movie matching movie title '%s'" % movie_to_searchs
 
-        movie_to_search = movie_to_searchs.iloc[-1]
+        movie_to_search = movie_to_searchs.iloc[index_1_based-1]
         idx = movies_df.index.get_loc(movie_to_search.name)
 
         tfidf = TfidfVectorizer(stop_words='english')
@@ -59,10 +59,14 @@ class MovieRecommender:
         scores = list(enumerate(cosine_sim[idx]))
         movies_df['score_'] = movies_df.apply(lambda row:scores[movies_df.index.get_loc(row.name)][1], axis=1)
         movies_df.sort_values(['score_'], ascending=False, inplace=True)
-        return movies_df[['title', 'score_']].iloc[0 : 6]
+        # recommendations = { r[0]:r[1] for r in movies_df[['title', 'score_']].iloc[1 : 6].values.tolist()}
+        recommendations = movies_df[['title', 'score_']].iloc[1 : 6].values.tolist()
+        # print(recommendations)
+        return recommendations
+        
 
 
-    def get_similar_by_features(self, metadata_df, movie_title):
+    def recommend_by_features(self, metadata_df, movie_title):
         keywords = pd.read_csv(DATAST_FOLDRE+'/keywords.csv', dtype={'id':'Int64'})
         credits = pd.read_csv(DATAST_FOLDRE+'/credits.csv', dtype={'id':'Int64'})
         metadata_df = metadata_df.drop([19730, 29503, 35587])
@@ -127,8 +131,8 @@ def main():
             quit = True
             continue
 
-        recommendations = mr.get_similar_movies_by_overview(title)
-        # recommendations = get_similar_by_features(top5000_movies, metadata_df, 'Grumpier Old Men')
+        recommendations = mr.recommend_by_overview(title)
+        # recommendations = recommend_by_features(top5000_movies, metadata_df, 'Grumpier Old Men')
         
         print(recommendations)
 
