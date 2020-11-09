@@ -121,7 +121,8 @@ def main():
     while (not quit):
         print("Input the movie title for recommendations like 'Grumpier Old Men', or 'quit' to quit:")
         title = input()
-        title.strip("' ")
+        title = title.strip("' ")
+        print(title)
         if title == 'quit':
             quit = True
             continue
