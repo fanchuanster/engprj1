@@ -17,7 +17,7 @@ class TestMovieRecommender(unittest.TestCase):
         recommendations = self.mr.recommend_by_overview(movie_title)
         self.assertIsNotNone(recommendations, "should recommend some movies with input movie title " + movie_title)
         self.assertGreater(len(recommendations), 4, "should recommend more than 4 movies with input movie title" + movie_title)
-        print("recommendations for {} are:{}".format(movie_title, recommendations))
+        print("recommendations for '{}' are:{}".format(movie_title, recommendations))
 
     def test_recommend_nothing_with_invalid_input(self):
         invalid_movie_title = "xxxxxtttttyyy xxx"
