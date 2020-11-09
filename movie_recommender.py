@@ -18,17 +18,14 @@ DATAST_FOLDRE = 'data/archive'
 class MovieRecommender:
 
     def __init__(self):
-        self.metadata_df = None
-        self.top5000_movies = None
+        # self.metadata_df = None
+        # self.top5000_movies = None
         movie_datafile = DATAST_FOLDRE+"/movies_metadata.csv"
         if os.path.exists(movie_datafile):
-            self.metadata_df = pd.read_csv(, low_memory=False)
+            self.metadata_df = pd.read_csv(movie_datafile, low_memory=False)
             self.top5000_movies = self.get_top_movies_by_score()
 
     def get_top_movies_by_score(self, quantile=0.9):
-        if not self.metadata_df:
-            return None
-
         C = self.metadata_df['vote_average'].mean()
         m = self.metadata_df['vote_count'].quantile(quantile)
 
@@ -45,9 +42,9 @@ class MovieRecommender:
         return movies_df[['id', 'title', 'vote_count', 'vote_average', 'score', 'overview']]
 
     def recommend_by_overview(self, title, index_1_based = 1):
-        if not self.metadata_df:
+        if not hasattr(self, "metadata_df"):
             return None
-            
+
         movies_df = self.metadata_df.copy()[self.metadata_df['id'].isin(self.top5000_movies.id) | (self.metadata_df['title']==title)]
         movie_to_searchs = movies_df[movies_df['title']==title]
         if movie_to_searchs.empty:
