@@ -64,8 +64,8 @@ class MovieRecommender:
         scores = list(enumerate(cosine_sim[idx]))
         movies_df['score_'] = movies_df.apply(lambda row:scores[movies_df.index.get_loc(row.name)][1], axis=1)
         movies_df.sort_values(['score_'], ascending=False, inplace=True)
-        # recommendations = { r[0]:r[1] for r in movies_df[['title', 'score_']].iloc[1 : 6].values.tolist()}
-        recommendations = { r[0]:r[1] for r in movies_df[['title', 'score_']].iloc[1 : 6].values.tolist() }
+        recommendations = movies_df[['title', 'score_']].iloc[1 : 6].values.tolist()
+        
         # print(recommendations)
         return recommendations
         

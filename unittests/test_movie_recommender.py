@@ -29,13 +29,13 @@ class TestMovieRecommender(unittest.TestCase):
         recommendations = self.mr.recommend_by_overview(movie_title)
         self.assertNotIn(movie_title, recommendations, movie_title + " should not be recommended for itself")
 
-    # def test_recommendations_descending_order(self):
-    #     movie_title = 'Grumpier Old Men'
-    #     recommendations = self.mr.recommend_by_overview(movie_title)
-    #     prev = recommendations[0]
-    #     for r in recommendations:
-    #         self.assertGreaterEqual(prev[1], r[1], "recommendations should be in descending order as best first: {}".format(recommendations))
-    #         prev = r
+    def test_recommendations_descending_order(self):
+        movie_title = 'Grumpier Old Men'
+        recommendations = self.mr.recommend_by_overview(movie_title)
+        prev = recommendations[0]
+        for r in recommendations:
+            self.assertGreaterEqual(prev[1], r[1], "recommendations should be in descending order as best first: {}".format(recommendations))
+            prev = r
 
 
 
