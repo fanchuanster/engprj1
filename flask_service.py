@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import jsonify
 from movie_recommender import MovieRecommender
 # import json
 
@@ -11,7 +12,7 @@ def recommend(movie_title):
     # return recommendations
     if not recommendations:
         return "no recommendations for %s" % movie_title
-    return recommendations
+    return jsonify(recommendations)
 
 if __name__ == "__main__":
     app.run(debug=True)
