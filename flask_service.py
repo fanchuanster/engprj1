@@ -12,7 +12,8 @@ def recommend(movie_title):
     # return recommendations
     if not recommendations:
         return "no recommendations for %s" % movie_title
-    return jsonify(recommendations)
+    # return jsonify([ { "title":r[0], "score":r[1] } for r in recommendations ])
+    return jsonify([ r[0] for r in recommendations ])
 
 if __name__ == "__main__":
     app.run(debug=True)

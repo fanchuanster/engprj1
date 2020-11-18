@@ -1,27 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
-export class HeroService {
+@Injectable({
+  providedIn: 'root'
+})
+export class MrService {
 
-  private heroesUrl = 'api/heroes';  // URL to web api
+  constructor(private http: HttpClient) { }
+
+  private heroesUrl = 'http://127.0.0.1:5000/recommend/Waiting%20to%20Exhale';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(
-    private http: HttpClient) { }
-
-  /** GET heroes from the server */
-  getHeroes(): Observable<Hero[]> {
-    return this.http.get<Hero[]>(this.heroesUrl)
-      .pipe(
-        tap(_ => this.log('fetched heroes')),
-        catchError(this.handleError<Hero[]>('getHeroes', []))
-      );
+    
+  getHeroes(): Observable<string[]> {
+    return this.http.get<string[]>(this.heroesUrl);
   }
 }

@@ -1,20 +1,27 @@
 import { Component, OnInit } from '@angular/core';
+import { MrService } from '../mr.service';
 
 @Component({
   selector: 'app-mr',
   templateUrl: './mr.component.html',
   styleUrls: ['./mr.component.css']
 })
+
 export class MrComponent implements OnInit {
+
+  constructor(private mrService: MrService) { }
 
   ngOnInit(): void {
   }
 
-  movie_title = "Go with wind"
-  recommendations = ["none"]
+  public movie_title: string = "Go with wind"
+  public recommendations: string[] = ['xxx']
   
-  recommend() {
-    this.movie_title = "xxx"
-    this.recommendations = ['movie1', "movie2", "movie n"]
+  recommend() {    
+    this.recommendations = ['data', 'data 2'];
+    this.mrService.getHeroes().subscribe((data:string[])=>{
+      console.log(data);
+      this.recommendations = ['data', 'data 2'];
+   }) 
   }
 }

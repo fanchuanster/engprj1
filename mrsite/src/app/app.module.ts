@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MrComponent } from './mr/mr.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MrService } from './mr.service';
 
 
 @NgModule({
@@ -16,11 +18,12 @@ import { MrComponent } from './mr/mr.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    HttpClientModule
   ],
   exports: [
     MrComponent
   ],
-  providers: [],
+  providers: [MrService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
