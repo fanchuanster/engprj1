@@ -1,6 +1,6 @@
 from flask import Flask
 from mvie_recommender import MovieRecommender
-import json
+# import json
 
 app = Flask(__name__)
 
@@ -8,7 +8,7 @@ app = Flask(__name__)
 def recommend(movie_title):
     mr = MovieRecommender()
     recommendations = mr.recommend_by_overview(title)
-    return json.dumps(recommendations)
+    return recommendations
 
 if __name__ == "__main__":
     app.run(debug=True)
