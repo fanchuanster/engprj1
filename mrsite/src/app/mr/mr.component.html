@@ -1,0 +1,13 @@
+
+<label for="name">Movie Name </label>
+<input type="text" [(ngModel)]="movie_title" name="name">
+<div>
+    <button (click)="recommend()">Recommend</button>
+</div>
+<div>
+    <ul>
+        <li *ngFor="let r of recommendations">
+            {{ r }}
+        </li>
+    </ul>
+</div>
