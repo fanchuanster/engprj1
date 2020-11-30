@@ -2,7 +2,15 @@
 
 <div>
     <label for="name">Movie Name 
-        <input type="text" [(ngModel)]="movie_title" name="name">
+        <!-- <input type="text" [(ngModel)]="movie_title" name="name"> -->
+        <!-- <select ng-model="selectedMovie">
+            <option ng-repeat="x in movie_titles" ng-value="{{x}}"></option>
+          </select> -->
+          <select>
+            <option ng-repeat="x in cars">{{x}}</option>
+          </select>
+          
+          <!-- <h1>You selected: {{selectedCar}}</h1> -->
     </label>
     <button style="margin-left: 20pt;" (click)="recommend()">Recommend</button>
 </div>

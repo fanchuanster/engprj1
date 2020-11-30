@@ -11,10 +11,15 @@ export class MrService {
 
   constructor(private http: HttpClient) { }
 
-  private heroesUrl = environment.api_url + '/recommend/';
+  private recommendUrl = environment.api_url + '/recommend/';
+  private movieTitlesUrl = environment.api_url + '/recommend/movie_titles';
     
   getRecommendations(title: string): Observable<string[]> {
-    console.log(this.heroesUrl)
-    return this.http.get<string[]>(this.heroesUrl + encodeURI(title));
+    console.log(this.recommendUrl)
+    return this.http.get<string[]>(this.recommendUrl + encodeURI(title));
+  }
+
+  getMovieTitles(): Observable<string[]> {
+    return this.http.get<string[]>(this.movieTitlesUrl);
   }
 }
