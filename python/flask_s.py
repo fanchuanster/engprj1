@@ -70,12 +70,25 @@ def hello_world():
 # @app.route('/<path:path>')
 # def catch_all(path):
     # return '{"your path":"You want path %s"}' % path
+ 
+ 
+ mr = None
+ def get_mr():
+    global mr
+    if not mr:
+        mr = MovieRecommender()
+    return mr
+ 
+@app.route("/recommend/movie_titles")
+def get_movie_titles():
+    mr = get_mr()
+    return mr.get_movie_titles()
 
 @app.route("/recommend/<string:movie_title>")
 def recommend(movie_title):
 	app.logger.info("recommending for %s - %s" % (movie_title, unquote(movie_title)))
 	movie_title = unquote(movie_title)
-	mr = MovieRecommender()
+	mr = get_mr()
 	recommendations = mr.recommend_by_overview(movie_title)
 	if not recommendations:
 		return jsonify([{"title":"None", "score":0}])

@@ -71,7 +71,8 @@ class MovieRecommender:
         # print(recommendations)
         return recommendations
         
-
+    def get_movie_titles(self):
+        return self.metadata_df.title.tolist()
 
     def recommend_by_features(self, metadata_df, movie_title):
         keywords = pd.read_csv(DATAST_FOLDRE+'/keywords.csv', dtype={'id':'Int64'})
@@ -127,6 +128,7 @@ def main():
     # pd.set_option("display.max_rows", None, "display.max_columns", None, "display.width", 1000)
 
     mr = MovieRecommender()
+    print(len(mr.get_movie_titles()))
 
     quit = False
     while (not quit):
