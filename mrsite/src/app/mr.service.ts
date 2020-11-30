@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +11,10 @@ export class MrService {
 
   constructor(private http: HttpClient) { }
 
-  private heroesUrl = 'http://127.0.0.1:5000/recommend/Waiting%20to%20Exhale';
-
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
-
+  private heroesUrl = environment.api_url + '/recommend/';
     
-  getHeroes(): Observable<string[]> {
-    return this.http.get<string[]>(this.heroesUrl);
+  getRecommendations(title: string): Observable<string[]> {
+    console.log(this.heroesUrl)
+    return this.http.get<string[]>(this.heroesUrl + encodeURI(title));
   }
 }

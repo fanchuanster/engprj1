@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { MrService } from '../mr.service';
 
 @Component({
@@ -7,21 +8,17 @@ import { MrService } from '../mr.service';
   styleUrls: ['./mr.component.css']
 })
 
-export class MrComponent implements OnInit {
+export class MrComponent {
 
   constructor(private mrService: MrService) { }
 
-  ngOnInit(): void {
-  }
-
-  public movie_title: string = "Go with wind"
-  public recommendations: string[] = ['xxx']
+  movie_title = "Grumpier Old Men";
+  recommendations;
   
-  recommend() {    
-    this.recommendations = ['data', 'data 2'];
-    this.mrService.getHeroes().subscribe((data:string[])=>{
+  recommend() {
+    this.mrService.getRecommendations(this.movie_title).subscribe((data:string[])=>{
       console.log(data);
-      this.recommendations = ['data', 'data 2'];
+      this.recommendations = data;
    }) 
   }
 }
