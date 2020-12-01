@@ -93,6 +93,16 @@ def recommend(movie_title):
 	if not recommendations:
 		return jsonify([{"title":"None", "score":0}])
 	return jsonify([ { "title":r[0], "score":r[1] } for r in recommendations ])
+    
+@app.route("/recommend2/<string:movie_title>")
+def recommend2(movie_title):
+	app.logger.info("recommending for %s - %s" % (movie_title, unquote(movie_title)))
+	movie_title = unquote(movie_title)
+	mr = get_mr()
+	recommendations = mr.recommend_by_overview(movie_title)
+	if not recommendations:
+		return jsonify([{"title":"None", "score":0}])
+	return jsonify([ { "title":r[0], "score":r[1] } for r in recommendations ])
 
 def main():
 	# app.run(host= '0.0.0.0')
