@@ -1,23 +1,24 @@
 
 
 <div>
-    <label for="name">Movie Name 
+    <!-- <label for="name">Movie Name  -->
         <!-- <input type="text" [(ngModel)]="movie_title" name="name"> -->
         <!-- <select ng-model="selectedMovie">
             <option ng-repeat="x in movie_titles" ng-value="{{x}}"></option>
           </select> -->
-          <select>
-            <option ng-repeat="x in cars">{{x}}</option>
-          </select>
+          
           
           <!-- <h1>You selected: {{selectedCar}}</h1> -->
-    </label>
+    <!-- </label> -->
+    <select>
+        <option ng-repeat="x in cars">{{x}}</option>
+      </select>
     <button style="margin-left: 20pt;" (click)="recommend()">Recommend</button>
 </div>
 <div>
     <ul>
         <li *ngFor="let r of recommendations">
-            <span>{{ r.title }}</span><span style="margin-left: 20pt;">{{ r.score * 100 }}</span>
+            <span>{{ r.title }}</span><span style="margin-left: 20pt;">{{ (r.score * 100).toFixed(2) }}</span>
         </li>
     </ul>
 </div>
