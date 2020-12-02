@@ -65,6 +65,9 @@ def autocomplete():
 @app.route('/hello')
 def hello_world():
     return 'Hello, World!'
+@app.route('/')
+def hello_world2():
+    return 'Hello, World!'
    
 # @app.route('/', defaults={'path': ''})
 # @app.route('/<path:path>')
