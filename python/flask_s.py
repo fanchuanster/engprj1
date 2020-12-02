@@ -109,8 +109,8 @@ def recommend2(movie_title):
 	return jsonify([ { "title":r[0], "score":r[1] } for r in recommendations ])
 
 def main():
-	app.run(host= 'localhost')
-	# app.run(host= '169.48.25.194')
+	# app.run(host= 'localhost')
+	app.run(host= '169.48.25.194')
 
 if __name__ == '__main__':
 	main()
