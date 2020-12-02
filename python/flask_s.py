@@ -82,10 +82,11 @@ def get_mr():
         mr = MovieRecommender()
     return mr
  
-@app.route("/recommend/movie_titles")
-def get_movie_titles():
+@app.route("/recommend/movie_titles/<string:search>")
+def get_movie_titles(search):
     mr = get_mr()
-    return jsonify(mr.get_movie_titles())
+    app.logger.info(search)
+    return jsonify([str(t) for t in mr.get_movie_titles() if str(t).lower().startswith(search.lower())][:100])
 
 @app.route("/recommend/<string:movie_title>")
 def recommend(movie_title):
@@ -108,8 +109,8 @@ def recommend2(movie_title):
 	return jsonify([ { "title":r[0], "score":r[1] } for r in recommendations ])
 
 def main():
-	# app.run(host= 'localhost')
-	app.run(host= '169.48.25.194')
+	app.run(host= 'localhost')
+	# app.run(host= '169.48.25.194')
 
 if __name__ == '__main__':
 	main()

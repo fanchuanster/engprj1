@@ -12,14 +12,14 @@ export class MrService {
   constructor(private http: HttpClient) { }
 
   private recommendUrl = environment.api_url + '/recommend/';
-  private movieTitlesUrl = environment.api_url + '/recommend/movie_titles';
+  private movieTitlesUrl = environment.api_url + '/recommend/movie_titles/';
     
   getRecommendations(title: string): Observable<string[]> {
     console.log(this.recommendUrl)
     return this.http.get<string[]>(this.recommendUrl + encodeURI(title));
   }
 
-  getMovieTitles(): Observable<string[]> {
-    return this.http.get<string[]>(this.movieTitlesUrl);
+  getMovieTitles(searchValue: string): Observable<string[]> {
+    return this.http.get<string[]>(this.movieTitlesUrl + searchValue);
   }
 }

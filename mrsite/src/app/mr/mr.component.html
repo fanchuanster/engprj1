@@ -1,18 +1,19 @@
 
 
 <div>
-    <!-- <label for="name">Movie Name  -->
-        <!-- <input type="text" [(ngModel)]="movie_title" name="name"> -->
-        <!-- <select ng-model="selectedMovie">
-            <option ng-repeat="x in movie_titles" ng-value="{{x}}"></option>
-          </select> -->
-          
-          
-          <!-- <h1>You selected: {{selectedCar}}</h1> -->
-    <!-- </label> -->
-    <select>
-        <option ng-repeat="x in cars">{{x}}</option>
-      </select>
+    <label for="name">Movie Name
+        <div>
+                <input type="text"         
+                (ngModelChange)="filterItem($event)" 
+                [(ngModel)]="movie_title" name="name">
+            <br>
+            <select #selectList [ngModel]="movie_title" (ngModelChange)="filterItem($event)" name="sel2" style="max-height:150px">
+                <option [value]="i" *ngFor="let i of movie_titles">{{i}}</option>
+            </select>
+        </div>
+    </label>
+    
+    
     <button style="margin-left: 20pt;" (click)="recommend()">Recommend</button>
 </div>
 <div>
@@ -22,3 +23,4 @@
         </li>
     </ul>
 </div>
+
