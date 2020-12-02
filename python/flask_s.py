@@ -72,8 +72,8 @@ def hello_world():
     # return '{"your path":"You want path %s"}' % path
  
  
- mr = None
- def get_mr():
+mr = None
+def get_mr():
     global mr
     if not mr:
         mr = MovieRecommender()
